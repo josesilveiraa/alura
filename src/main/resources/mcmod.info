@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "alura",
+    "name": "Alura",
+    "description": "Private ghost client.",
+    "version": "0.1",
+    "mcversion": "1.8.9",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Josesilveiraa"
+    ],
+    "credits": "The Forge and FML guys, for making this example",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
