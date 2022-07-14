@@ -41,8 +41,6 @@ public class    Alura {
         ConfigLoader.load();
 
         Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::save));
-
-        System.out.println(getModuleManager().getModules().size());
     }
 
     @SubscribeEvent
