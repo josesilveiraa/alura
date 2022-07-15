@@ -48,17 +48,19 @@ public class ConfigSaver {
 
         modObj.add("module", new JsonPrimitive(module.getDisplayName()));
 
-        module.getSettings().forEach(setting -> {
+        Alura.getModuleManager().getSettingsForModule(module).forEach(setting -> {
             if(setting instanceof BooleanSetting) {
-                settingsObj.add(((BooleanSetting) setting).configName, new JsonPrimitive(((BooleanSetting) setting).getValue()));
+                settingsObj.add(setting.configName, new JsonPrimitive(((BooleanSetting) setting).getValue()));
             } else if(setting instanceof IntegerSetting) {
-                settingsObj.add(((IntegerSetting) setting).configName, new JsonPrimitive(((IntegerSetting) setting).getValue()));
+                settingsObj.add(setting.configName, new JsonPrimitive(((IntegerSetting) setting).getValue()));
             } else if(setting instanceof DoubleSetting) {
-                settingsObj.add(((DoubleSetting) setting).configName, new JsonPrimitive(((DoubleSetting) setting).getValue()));
+                settingsObj.add(setting.configName, new JsonPrimitive(((DoubleSetting) setting).getValue()));
             } else if(setting instanceof ColorSetting) {
-                settingsObj.add(((ColorSetting) setting).configName, new JsonPrimitive(((ColorSetting) setting).toInteger()));
+                settingsObj.add(setting.configName, new JsonPrimitive(((ColorSetting) setting).toInteger()));
             } else if(setting instanceof EnumSetting) {
-                settingsObj.add(((EnumSetting<?>) setting).configName, new JsonPrimitive(((EnumSetting<?>) setting).getValueName()));
+                settingsObj.add(setting.configName, new JsonPrimitive(((EnumSetting<?>) setting).getValueIndex()));
+            } else if(setting instanceof KeybindSetting) {
+                settingsObj.add(setting.configName, new JsonPrimitive(((KeybindSetting) setting).getKey()));
             }
         });
 

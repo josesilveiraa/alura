@@ -8,15 +8,13 @@ import com.lukflug.panelstudio.setting.ILabeled;
 import me.josesilveiraa.alura.setting.Setting;
 
 public class EnumSetting<E extends Enum<E>> extends Setting<E> implements IEnumSetting {
-    private final Class<E> settingClass;
+    public final Class<E> settingClass;
     private final ILabeled[] array;
 
     public EnumSetting(String displayName, String configName, String description, IBoolean visible, E value, Class<E> settingClass) {
         super(displayName, configName, description, visible, value);
         this.settingClass = settingClass;
-        array = Arrays.stream(settingClass.getEnumConstants()).map(v -> {
-            return (ILabeled) v::toString;
-        }).toArray(ILabeled[]::new);
+        array = Arrays.stream(settingClass.getEnumConstants()).map(v -> (ILabeled) v::toString).toArray(ILabeled[]::new);
     }
 
     @Override

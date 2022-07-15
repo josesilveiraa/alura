@@ -4,6 +4,7 @@ import me.josesilveiraa.alura.api.config.ConfigLoader;
 import me.josesilveiraa.alura.api.config.ConfigSaver;
 import me.josesilveiraa.alura.clickgui.ClickGUI;
 import me.josesilveiraa.alura.module.Category;
+import me.josesilveiraa.alura.module.Module;
 import me.josesilveiraa.alura.module.impl.gui.ClickGUIModule;
 import me.josesilveiraa.alura.module.impl.gui.HUDEditorModule;
 import me.josesilveiraa.alura.module.manager.ModuleManager;
@@ -21,7 +22,7 @@ import org.lwjgl.input.Keyboard;
 
 
 @Mod(modid = Alura.MODID, version = Alura.VERSION)
-public class    Alura {
+public class Alura {
     public static final String MODID = "alura";
     public static final String VERSION = "0.1";
 
@@ -41,6 +42,8 @@ public class    Alura {
         ConfigLoader.load();
 
         Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::save));
+
+        moduleManager.getModules().forEach(mod -> System.out.println(mod.getDisplayName()));
     }
 
     @SubscribeEvent
@@ -61,13 +64,15 @@ public class    Alura {
     public void tick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             if (Utils.isInGame()) {
-                    getModuleManager().getModules().forEach(module -> {
-                        if(Minecraft.getMinecraft().currentScreen == null) {
-                            module.handleBinding();
-                        }
 
-                        if(module.isEnabled().isOn()) module.onUpdate();
-                    });
+                for(Module module : getModuleManager().getModules()) {
+                    if(Minecraft.getMinecraft().currentScreen == null) {
+                        module.handleBinding();
+                    }
+                    if(module.isModuleEnabled()) {
+                        module.onUpdate();
+                    }
+                }
             }
         }
     }

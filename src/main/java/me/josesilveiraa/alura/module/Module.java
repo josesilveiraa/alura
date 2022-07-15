@@ -7,10 +7,10 @@ import java.util.stream.Stream;
 
 import com.lukflug.panelstudio.base.IBoolean;
 import com.lukflug.panelstudio.base.IToggleable;
-import com.lukflug.panelstudio.setting.IKeybindSetting;
 import com.lukflug.panelstudio.setting.IModule;
 import com.lukflug.panelstudio.setting.ISetting;
 import me.josesilveiraa.alura.setting.Setting;
+import me.josesilveiraa.alura.setting.impl.KeybindSetting;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
@@ -21,7 +21,7 @@ public class Module implements IModule {
     public final List<Setting<?>> settings = new ArrayList<>();
     public final boolean toggleable;
     private boolean enabled = false;
-    private int binding;
+    private int binding = 0;
     private boolean isBindPressed = false;
     protected static Minecraft mc = Minecraft.getMinecraft();
 
@@ -30,7 +30,22 @@ public class Module implements IModule {
         this.description = description;
         this.visible = visible;
         this.toggleable = toggleable;
-        this.binding = 0;
+        this.settings.add(new KeybindSetting("Keybind", "keybind", "The module binding.", () -> true, 0) {
+            @Override
+            public int getKey() {
+                return binding;
+            }
+
+            @Override
+            public void setKey(int key) {
+                binding = key;
+            }
+
+            @Override
+            public String getKeyName() {
+                return getBindName();
+            }
+        });
     }
 
     public void onEnable() {}
@@ -67,6 +82,7 @@ public class Module implements IModule {
             }
         }
     }
+
 
     @Override
     public String getDisplayName() {
@@ -108,30 +124,35 @@ public class Module implements IModule {
         return Keyboard.getKeyName(this.binding);
     }
 
+    public boolean isModuleEnabled() {
+        return enabled;
+    }
+
     @Override
     public Stream<ISetting<?>> getSettings() {
         Stream<ISetting<?>> result = settings.stream().filter(setting -> setting instanceof ISetting).sorted(Comparator.comparing(a -> a.displayName)).map(setting -> (ISetting<?>) setting);
 
-        return Stream.concat(result, Stream.of(new IKeybindSetting() {
-            @Override
-            public int getKey() {
-                return getBinding();
-            }
-
-            @Override
-            public void setKey(int key) {
-                Module.this.binding = key;
-            }
-
-            @Override
-            public String getKeyName() {
-                return getBindName();
-            }
-
-            @Override
-            public String getDisplayName() {
-                return "Keybind";
-            }
-        }));
+//        return Stream.concat(result, Stream.of(new IKeybindSetting() {
+//            @Override
+//            public int getKey() {
+//                return getBinding();
+//            }
+//
+//            @Override
+//            public void setKey(int key) {
+//                Module.this.binding = key;
+//            }
+//
+//            @Override
+//            public String getKeyName() {
+//                return getBindName();
+//            }
+//
+//            @Override
+//            public String getDisplayName() {
+//                return "Keybind";
+//            }
+//        }));
+        return result;
     }
 }

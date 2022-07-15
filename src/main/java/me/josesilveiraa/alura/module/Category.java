@@ -3,6 +3,8 @@ package me.josesilveiraa.alura.module;
 import com.lukflug.panelstudio.setting.ICategory;
 import com.lukflug.panelstudio.setting.IClient;
 import com.lukflug.panelstudio.setting.IModule;
+import me.josesilveiraa.alura.module.impl.combat.AutoClicker;
+import me.josesilveiraa.alura.module.impl.combat.OldHitReg;
 import me.josesilveiraa.alura.module.impl.combat.Velocity;
 import me.josesilveiraa.alura.module.impl.gui.ClickGUIModule;
 import me.josesilveiraa.alura.module.impl.gui.HUDEditorModule;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public enum Category implements ICategory {
-    COMBAT("Combat"), EXPLOITS("Exploits"), HUD("HUD"), MISCELLANEOUS("Miscellaneous"), MOVEMENT("Movement"), OTHER("Other"), RENDER("Render"), WORLD("World");
+    COMBAT("Combat"), HUD("HUD"), MOVEMENT("Movement"), OTHER("Other"), RENDER("Render"), WORLD("World");
     public final String displayName;
     public final List<Module> modules = new ArrayList<>();
 
@@ -37,6 +39,8 @@ public enum Category implements ICategory {
         Category.RENDER.modules.add(new Fullbright());
 
         Category.COMBAT.modules.add(new Velocity());
+        Category.COMBAT.modules.add(new OldHitReg());
+        Category.COMBAT.modules.add(new AutoClicker());
     }
 
     @Override
