@@ -1,13 +1,16 @@
 package me.josesilveiraa.alura;
 
+import me.josesilveiraa.alura.api.command.Command;
+import me.josesilveiraa.alura.api.command.manager.CommandManager;
 import me.josesilveiraa.alura.api.config.ConfigLoader;
 import me.josesilveiraa.alura.api.config.ConfigSaver;
-import me.josesilveiraa.alura.clickgui.ClickGUI;
-import me.josesilveiraa.alura.module.Category;
-import me.josesilveiraa.alura.module.Module;
-import me.josesilveiraa.alura.module.impl.gui.ClickGUIModule;
-import me.josesilveiraa.alura.module.impl.gui.HUDEditorModule;
-import me.josesilveiraa.alura.module.manager.ModuleManager;
+import me.josesilveiraa.alura.api.clickgui.ClickGUI;
+import me.josesilveiraa.alura.api.event.ClientPreChatEvent;
+import me.josesilveiraa.alura.client.module.Category;
+import me.josesilveiraa.alura.client.module.Module;
+import me.josesilveiraa.alura.client.module.impl.gui.ClickGUIModule;
+import me.josesilveiraa.alura.client.module.impl.gui.HUDEditorModule;
+import me.josesilveiraa.alura.client.module.manager.ModuleManager;
 import me.josesilveiraa.alura.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -27,6 +30,7 @@ public class Alura {
     public static final String VERSION = "0.1";
 
     private static ModuleManager moduleManager;
+    private static CommandManager commandManager;
 
     private static ClickGUI clickGUI;
 
@@ -34,6 +38,7 @@ public class Alura {
     public void init(FMLInitializationEvent event) {
         Category.init();
         moduleManager = new ModuleManager();
+        commandManager = new CommandManager();
 
         clickGUI = new ClickGUI();
 
@@ -42,8 +47,6 @@ public class Alura {
         ConfigLoader.load();
 
         Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::save));
-
-        moduleManager.getModules().forEach(mod -> System.out.println(mod.getDisplayName()));
     }
 
     @SubscribeEvent
@@ -55,9 +58,13 @@ public class Alura {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Keyboard.isKeyDown(ClickGUIModule.keybind.getKey())) clickGUI.enterGUI();
-        if (Keyboard.isKeyDown(HUDEditorModule.binding.getKey())) clickGUI.enterHUDEditor();
+        if (Keyboard.isKeyDown(Category.clickGUIModule.getBinding())) clickGUI.enterGUI();
+        if (Keyboard.isKeyDown(Category.hudEditorModule.getBinding())) clickGUI.enterHUDEditor();
         if (Keyboard.getEventKeyState()) clickGUI.handleKeyEvent(Keyboard.getEventKey());
+
+        for(Module module : getModuleManager().getModules()) {
+            if(module.getBinding() != 0 && Keyboard.isKeyDown(module.getBinding())) module.toggle();
+        }
     }
 
     @SubscribeEvent
@@ -65,17 +72,21 @@ public class Alura {
         if (event.phase == TickEvent.Phase.END) {
             if (Utils.isInGame()) {
 
-                for(Module module : getModuleManager().getModules()) {
-                    if(Minecraft.getMinecraft().currentScreen == null) {
-                        module.handleBinding();
-                    }
-                    if(module.isModuleEnabled()) {
-                        module.onUpdate();
-                    }
+                for (Module module : getModuleManager().getModules()) {
+                    if (module.isModuleEnabled()) module.onUpdate();
                 }
             }
         }
     }
+
+    @SubscribeEvent
+    public void onMessage(ClientPreChatEvent event) {
+        if(event.message.startsWith(getCommandManager().getPrefix())) {
+            getCommandManager().callCommand(event.message.replaceFirst(".", ""));
+            event.setCanceled(true);
+        }
+    }
+
 
     public static ModuleManager getModuleManager() {
         return moduleManager;
@@ -83,5 +94,9 @@ public class Alura {
 
     public static ClickGUI getClickGUI() {
         return clickGUI;
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
     }
 }

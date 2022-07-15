@@ -87,3 +87,9 @@ reobf {
         classpath = sourceSets.main.compileClasspath
     }
 }
+
+jar {
+    manifest {
+        attributes "FMLCorePlugin": "me.josesilveiraa.alura.api.asm.FMLLoadingPlugin", "FMLCorePluginContainsFMLMod": true, "ModSide": "CLIENT"
+    }
+}

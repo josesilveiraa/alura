@@ -2,13 +2,11 @@ package me.josesilveiraa.alura.api.config;
 
 import com.google.gson.*;
 import me.josesilveiraa.alura.Alura;
-import me.josesilveiraa.alura.clickgui.GUIConfig;
-import me.josesilveiraa.alura.module.Module;
-import me.josesilveiraa.alura.setting.Setting;
-import me.josesilveiraa.alura.setting.impl.*;
+import me.josesilveiraa.alura.api.clickgui.GUIConfig;
+import me.josesilveiraa.alura.client.module.Module;
+import me.josesilveiraa.alura.client.setting.impl.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -33,7 +31,7 @@ public class ConfigSaver {
     }
 
     public static void saveModules() throws IOException {
-        for(Module module : Alura.getModuleManager().getModules()) {
+        for (Module module : Alura.getModuleManager().getModules()) {
             saveModule(module);
         }
     }
@@ -47,20 +45,23 @@ public class ConfigSaver {
         JsonObject settingsObj = new JsonObject();
 
         modObj.add("module", new JsonPrimitive(module.getDisplayName()));
+        modObj.add("enabled", new JsonPrimitive(module.isModuleEnabled()));
 
         Alura.getModuleManager().getSettingsForModule(module).forEach(setting -> {
-            if(setting instanceof BooleanSetting) {
+            if (setting instanceof BooleanSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((BooleanSetting) setting).getValue()));
-            } else if(setting instanceof IntegerSetting) {
+            } else if (setting instanceof IntegerSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((IntegerSetting) setting).getValue()));
-            } else if(setting instanceof DoubleSetting) {
+            } else if (setting instanceof DoubleSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((DoubleSetting) setting).getValue()));
-            } else if(setting instanceof ColorSetting) {
+            } else if (setting instanceof ColorSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((ColorSetting) setting).toInteger()));
-            } else if(setting instanceof EnumSetting) {
+            } else if (setting instanceof EnumSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((EnumSetting<?>) setting).getValueIndex()));
-            } else if(setting instanceof KeybindSetting) {
+            } else if (setting instanceof KeybindSetting) {
                 settingsObj.add(setting.configName, new JsonPrimitive(((KeybindSetting) setting).getKey()));
+            } else if (setting instanceof StringSetting) {
+                settingsObj.add(setting.configName, new JsonPrimitive(((StringSetting) setting).getValue()));
             }
         });
 
@@ -72,16 +73,16 @@ public class ConfigSaver {
 
     private static void saveConfigs() throws IOException {
         Path path = Paths.get(MAIN_DIR);
-        if(!Files.exists(path)) Files.createDirectories(path);
+        if (!Files.exists(path)) Files.createDirectories(path);
 
         Path path1 = Paths.get(MAIN_DIR + MODULES_DIR);
-        if(!Files.exists(path1)) Files.createDirectories(path1);
+        if (!Files.exists(path1)) Files.createDirectories(path1);
 
         Path path2 = Paths.get(MAIN_DIR + MAIN_SUB_DIR);
-        if(!Files.exists(path2)) Files.createDirectories(path2);
+        if (!Files.exists(path2)) Files.createDirectories(path2);
 
         Path path3 = Paths.get(MAIN_DIR + MISC_DIR);
-        if(!Files.exists(path3)) Files.createDirectories(path3);
+        if (!Files.exists(path3)) Files.createDirectories(path3);
     }
 
     private static void saveClickGUIPositions() throws IOException {
@@ -91,10 +92,10 @@ public class ConfigSaver {
 
     private static void createFiles(String location, String name) throws IOException {
         Path path = Paths.get(MAIN_DIR + location + name + ".json");
-        if(Files.exists(path)) {
+        if (Files.exists(path)) {
             File file = new File(MAIN_DIR + location + name + ".json");
 
-            if(!file.delete()) return;
+            if (!file.delete()) return;
         }
         Files.createFile(path);
     }

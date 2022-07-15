@@ -4,10 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.josesilveiraa.alura.Alura;
-import me.josesilveiraa.alura.clickgui.GUIConfig;
-import me.josesilveiraa.alura.module.Module;
-import me.josesilveiraa.alura.setting.Setting;
-import me.josesilveiraa.alura.setting.impl.*;
+import me.josesilveiraa.alura.api.clickgui.GUIConfig;
+import me.josesilveiraa.alura.client.module.Module;
+import me.josesilveiraa.alura.client.setting.Setting;
+import me.josesilveiraa.alura.client.setting.impl.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,13 +34,13 @@ public class ConfigLoader {
     private static void loadModules() throws IOException {
         String modLocation = MAIN_DIR + MODULES_DIR;
 
-        for(Module module : Alura.getModuleManager().getModules()) {
+        for (Module module : Alura.getModuleManager().getModules()) {
             loadModule(modLocation, module);
         }
     }
 
     private static void loadModule(String modLocation, Module module) throws IOException {
-        if(!Files.exists(Paths.get(modLocation + module.getDisplayName() + ".json"))) return;
+        if (!Files.exists(Paths.get(modLocation + module.getDisplayName() + ".json"))) return;
 
         InputStream is = Files.newInputStream(Paths.get(modLocation + module.getDisplayName() + ".json"));
         JsonObject obj;
@@ -51,10 +51,14 @@ public class ConfigLoader {
             return;
         }
 
-        if(obj.get("module") == null) return;
+        if (obj.get("module") == null) return;
+        if(obj.get("enabled") == null) return;
+        if(obj.get("enabled").getAsBoolean()) {
+            module.enable();
+        } else module.disable();
 
         JsonObject settingObj = obj.get("settings").getAsJsonObject();
-        for(Setting<?> setting : Alura.getModuleManager().getSettingsForModule(module)) {
+        for (Setting<?> setting : Alura.getModuleManager().getSettingsForModule(module)) {
             JsonElement dataObj = settingObj.get(setting.configName);
             try {
                 if (dataObj != null && dataObj.isJsonPrimitive()) {
@@ -68,11 +72,14 @@ public class ConfigLoader {
                         ((ColorSetting) setting).fromInteger(dataObj.getAsInt());
                     } else if (setting instanceof EnumSetting) {
                         ((EnumSetting<?>) setting).setValueIndex(dataObj.getAsInt());
-                    } else if(setting instanceof KeybindSetting) {
+                    } else if (setting instanceof KeybindSetting) {
                         ((KeybindSetting) setting).setKey(dataObj.getAsInt());
+                    } else if (setting instanceof StringSetting) {
+                        ((StringSetting) setting).setValue(dataObj.getAsString());
                     }
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         is.close();
     }
