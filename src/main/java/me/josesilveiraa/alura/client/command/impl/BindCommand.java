@@ -1,7 +1,7 @@
-package me.josesilveiraa.alura.api.command.impl;
+package me.josesilveiraa.alura.client.command.impl;
 
 import me.josesilveiraa.alura.Alura;
-import me.josesilveiraa.alura.api.command.Command;
+import me.josesilveiraa.alura.client.command.Command;
 import me.josesilveiraa.alura.client.module.Module;
 import me.josesilveiraa.alura.util.MessageUtil;
 import org.lwjgl.input.Keyboard;
@@ -24,13 +24,13 @@ public class BindCommand extends Command {
                 if(bindKey.equalsIgnoreCase("none")) {
                     module.setBinding(Keyboard.KEY_NONE);
                     MessageUtil.sendClientMessage("Module " + module.getDisplayName() + " bound to NONE.");
-                } else if(bindKey.length() == 1) {
+                } else if(bindKey.length() >= 1) {
                     int key = Keyboard.getKeyIndex(bindKey);
 
                     module.setBinding(key);
                     MessageUtil.sendClientMessage("Module " + module.getDisplayName() + " bound to " + Keyboard.getKeyName(key) + ".");
 
-                } else if (bindKey.length() > 1) {
+                } else {
                     MessageUtil.sendClientMessage("Correct usage: " + getSyntax());
                 }
             }

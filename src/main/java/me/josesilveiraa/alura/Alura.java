@@ -1,18 +1,14 @@
 package me.josesilveiraa.alura;
 
-import me.josesilveiraa.alura.api.command.Command;
-import me.josesilveiraa.alura.api.command.manager.CommandManager;
+import me.josesilveiraa.alura.client.command.manager.CommandManager;
 import me.josesilveiraa.alura.api.config.ConfigLoader;
 import me.josesilveiraa.alura.api.config.ConfigSaver;
 import me.josesilveiraa.alura.api.clickgui.ClickGUI;
 import me.josesilveiraa.alura.api.event.ClientPreChatEvent;
 import me.josesilveiraa.alura.client.module.Category;
 import me.josesilveiraa.alura.client.module.Module;
-import me.josesilveiraa.alura.client.module.impl.gui.ClickGUIModule;
-import me.josesilveiraa.alura.client.module.impl.gui.HUDEditorModule;
 import me.josesilveiraa.alura.client.module.manager.ModuleManager;
 import me.josesilveiraa.alura.util.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -63,6 +59,7 @@ public class Alura {
         if (Keyboard.getEventKeyState()) clickGUI.handleKeyEvent(Keyboard.getEventKey());
 
         for(Module module : getModuleManager().getModules()) {
+//            if(module.getDisplayName().equals("HUDEDitor") || module.getDisplayName().equals("ClickGUI"))
             if(module.getBinding() != 0 && Keyboard.isKeyDown(module.getBinding())) module.toggle();
         }
     }

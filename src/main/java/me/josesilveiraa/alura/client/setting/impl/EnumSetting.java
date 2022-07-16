@@ -8,7 +8,7 @@ import com.lukflug.panelstudio.setting.ILabeled;
 import me.josesilveiraa.alura.client.setting.Setting;
 
 public class EnumSetting<E extends Enum<E>> extends Setting<E> implements IEnumSetting {
-    public final Class<E> settingClass;
+    private final Class<E> settingClass;
     private final ILabeled[] array;
 
     public EnumSetting(String displayName, String configName, String description, IBoolean visible, E value, Class<E> settingClass) {

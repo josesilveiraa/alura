@@ -1,4 +1,4 @@
-package me.josesilveiraa.alura.client.module.impl.gui;
+package me.josesilveiraa.alura.client.module.impl.hud;
 
 import com.lukflug.panelstudio.base.IToggleable;
 import com.lukflug.panelstudio.component.IFixedComponent;

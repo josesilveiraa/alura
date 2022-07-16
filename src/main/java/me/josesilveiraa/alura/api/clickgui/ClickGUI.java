@@ -16,9 +16,10 @@ import com.lukflug.panelstudio.widget.*;
 import me.josesilveiraa.alura.Alura;
 import me.josesilveiraa.alura.client.module.Category;
 import me.josesilveiraa.alura.client.module.impl.gui.ClickGUIModule;
-import me.josesilveiraa.alura.client.module.impl.gui.HUDEditorModule;
-import me.josesilveiraa.alura.client.module.impl.gui.TabGUIModule;
-import me.josesilveiraa.alura.client.module.impl.gui.WatermarkModule;
+import me.josesilveiraa.alura.client.module.impl.hud.HUDEditorModule;
+import me.josesilveiraa.alura.client.module.impl.hud.TabGUIModule;
+import me.josesilveiraa.alura.client.module.impl.hud.WatermarkModule;
+import me.josesilveiraa.alura.client.module.impl.hud.ArrayListModule;
 import me.josesilveiraa.alura.client.setting.impl.BooleanSetting;
 import me.josesilveiraa.alura.client.setting.impl.ColorSetting;
 import me.josesilveiraa.alura.client.setting.impl.IntegerSetting;
@@ -33,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
 
 public class ClickGUI extends MinecraftHUDGUI {
-    private final GUIInterface inter;
+    public final GUIInterface inter;
     public final HUDGUI gui;
     public static final int WIDTH = 120, HEIGHT = 12, DISTANCE = 6, BORDER = 2;
 
@@ -80,6 +81,7 @@ public class ClickGUI extends MinecraftHUDGUI {
             }
         }, animation), TabGUIModule.getToggle(), animation.get(), theme, BORDER);
         gui.addHUDComponent(WatermarkModule.getComponent(), WatermarkModule.getToggle(), animation.get(), theme, BORDER);
+        gui.addHUDComponent(ArrayListModule.getComponent(), ArrayListModule.getToggle(), animation.get(), theme, BORDER);
 
         // Creating popup types ...
         BiFunction<Context, Integer, Integer> scrollHeight = (context, componentHeight) -> Math.min(componentHeight, Math.max(HEIGHT * 4, ClickGUI.this.height - context.getPos().y - HEIGHT));

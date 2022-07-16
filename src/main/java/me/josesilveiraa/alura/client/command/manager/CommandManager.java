@@ -1,9 +1,8 @@
-package me.josesilveiraa.alura.api.command.manager;
+package me.josesilveiraa.alura.client.command.manager;
 
-import me.josesilveiraa.alura.api.command.Command;
-import me.josesilveiraa.alura.api.command.impl.BindCommand;
+import me.josesilveiraa.alura.client.command.Command;
+import me.josesilveiraa.alura.client.command.impl.BindCommand;
 import me.josesilveiraa.alura.util.MessageUtil;
-import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.List;

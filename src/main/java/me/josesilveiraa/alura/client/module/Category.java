@@ -7,9 +7,10 @@ import me.josesilveiraa.alura.client.module.impl.combat.AutoClicker;
 import me.josesilveiraa.alura.client.module.impl.combat.OldHitReg;
 import me.josesilveiraa.alura.client.module.impl.combat.Velocity;
 import me.josesilveiraa.alura.client.module.impl.gui.ClickGUIModule;
-import me.josesilveiraa.alura.client.module.impl.gui.HUDEditorModule;
-import me.josesilveiraa.alura.client.module.impl.gui.TabGUIModule;
-import me.josesilveiraa.alura.client.module.impl.gui.WatermarkModule;
+import me.josesilveiraa.alura.client.module.impl.hud.HUDEditorModule;
+import me.josesilveiraa.alura.client.module.impl.hud.TabGUIModule;
+import me.josesilveiraa.alura.client.module.impl.hud.WatermarkModule;
+import me.josesilveiraa.alura.client.module.impl.hud.ArrayListModule;
 import me.josesilveiraa.alura.client.module.impl.movement.Sprint;
 import me.josesilveiraa.alura.client.module.impl.render.Fullbright;
 
@@ -34,10 +35,11 @@ public enum Category implements ICategory {
         Category.MOVEMENT.modules.add(new Sprint());
 
         Category.OTHER.modules.add(clickGUIModule = new ClickGUIModule());
-        Category.OTHER.modules.add(hudEditorModule = new HUDEditorModule());
 
+        Category.HUD.modules.add(hudEditorModule = new HUDEditorModule());
         Category.HUD.modules.add(new TabGUIModule());
         Category.HUD.modules.add(new WatermarkModule());
+        Category.HUD.modules.add(new ArrayListModule());
 
         Category.RENDER.modules.add(new Fullbright());
 

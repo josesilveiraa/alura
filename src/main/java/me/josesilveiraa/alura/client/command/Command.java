@@ -1,4 +1,4 @@
-package me.josesilveiraa.alura.api.command;
+package me.josesilveiraa.alura.client.command;
 
 import net.minecraft.client.Minecraft;
 

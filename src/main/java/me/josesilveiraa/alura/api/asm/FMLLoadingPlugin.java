@@ -1,5 +1,6 @@
 package me.josesilveiraa.alura.api.asm;
 
+import me.josesilveiraa.alura.api.asm.transformer.ChatTransformer;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 

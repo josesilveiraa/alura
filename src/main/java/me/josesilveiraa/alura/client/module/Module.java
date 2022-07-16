@@ -20,6 +20,7 @@ public class Module implements IModule {
     public final IBoolean visible;
     public final List<Setting<?>> settings = new ArrayList<>();
     public final boolean toggleable;
+    private boolean shown = true;
     private boolean enabled = false;
     private int binding = 0;
     protected static Minecraft mc = Minecraft.getMinecraft();
@@ -29,6 +30,30 @@ public class Module implements IModule {
         this.description = description;
         this.visible = visible;
         this.toggleable = toggleable;
+        this.settings.add(new KeybindSetting("Keybind", "keybind", "The module binding.", () -> true, 0) {
+            @Override
+            public int getKey() {
+                return binding;
+            }
+
+            @Override
+            public void setKey(int key) {
+                binding = key;
+            }
+
+            @Override
+            public String getKeyName() {
+                return getBindName();
+            }
+        });
+    }
+
+    public Module(String displayName, String description, IBoolean visible, boolean toggleable, boolean shown) {
+        this.displayName = displayName;
+        this.description = description;
+        this.visible = visible;
+        this.toggleable = toggleable;
+        this.shown = shown;
         this.settings.add(new KeybindSetting("Keybind", "keybind", "The module binding.", () -> true, 0) {
             @Override
             public int getKey() {
@@ -63,6 +88,10 @@ public class Module implements IModule {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public boolean isShown() {
+        return shown;
+    }
+
     public void disable() {
         this.enabled = false;
         this.onDisable();
@@ -71,6 +100,7 @@ public class Module implements IModule {
     }
 
     public void toggle() {
+        if(!toggleable) return;
         if (enabled) disable();
         else enable();
     }
@@ -125,29 +155,6 @@ public class Module implements IModule {
 
     @Override
     public Stream<ISetting<?>> getSettings() {
-        Stream<ISetting<?>> result = settings.stream().filter(setting -> setting instanceof ISetting).sorted(Comparator.comparing(a -> a.displayName)).map(setting -> (ISetting<?>) setting);
-
-//        return Stream.concat(result, Stream.of(new IKeybindSetting() {
-//            @Override
-//            public int getKey() {
-//                return getBinding();
-//            }
-//
-//            @Override
-//            public void setKey(int key) {
-//                Module.this.binding = key;
-//            }
-//
-//            @Override
-//            public String getKeyName() {
-//                return getBindName();
-//            }
-//
-//            @Override
-//            public String getDisplayName() {
-//                return "Keybind";
-//            }
-//        }));
-        return result;
+        return settings.stream().filter(setting -> setting instanceof ISetting).sorted(Comparator.comparing(a -> a.displayName)).map(setting -> (ISetting<?>) setting);
     }
 }

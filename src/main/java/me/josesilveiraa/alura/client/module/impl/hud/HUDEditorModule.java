@@ -1,4 +1,4 @@
-package me.josesilveiraa.alura.client.module.impl.gui;
+package me.josesilveiraa.alura.client.module.impl.hud;
 
 import me.josesilveiraa.alura.client.module.Module;
 import me.josesilveiraa.alura.client.setting.impl.BooleanSetting;

@@ -37,7 +37,7 @@ public class AutoClicker extends Module {
     private final IntegerSetting maximumCps = new IntegerSetting("Maximum CPS", "maxCps", "Maximum amount of clicks.", () -> true, 1, 60, 20);
     private final EnumSetting<Event> eventType = new EnumSetting<>("Event", "eventType", "Which event do you want the module to work.", () -> true, Event.TICK, Event.class);
     private final BooleanSetting breakBlocks = new BooleanSetting("Break blocks", "brkBlocks", "Gives you the ability to break blocks.", () -> true, true);
-    private final BooleanSetting invFill = new BooleanSetting("Inventory fill", "invFill", null, () -> true, false);
+    private final BooleanSetting allowInInventory = new BooleanSetting("Allow in inventory", "allowInInv", null, () -> true, false);
     private final BooleanSetting weaponOnly = new BooleanSetting("Weapon only", "wpnOnly", "The module just works with weapons.", () -> true, false);
 
     private final DoubleSetting jitterLeft = new DoubleSetting("Left jitter", "leftJitter", null, () -> true, 0.0, 3.0, 0.0);
@@ -60,7 +60,7 @@ public class AutoClicker extends Module {
         settings.add(maximumCps);
         settings.add(eventType);
         settings.add(breakBlocks);
-        settings.add(invFill);
+        settings.add(allowInInventory);
         settings.add(weaponOnly);
         settings.add(jitterLeft);
 
@@ -148,10 +148,13 @@ public class AutoClicker extends Module {
                 KeyBinding.onTick(key);
                 genLeftTimings();
                 setMouseButtonState(0, true);
+
                 leftDown = false;
             } else if (System.currentTimeMillis() > leftDownTime) {
                 KeyBinding.setKeyBindState(key, false);
+
                 leftDown = true;
+
                 setMouseButtonState(0, false);
             }
         } else genLeftTimings();
@@ -211,7 +214,7 @@ public class AutoClicker extends Module {
     }
 
     public void doInventoryClick() {
-        if (invFill.isOn() && (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest)) {
+        if (allowInInventory.isOn() && (mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest)) {
             if (!Mouse.isButtonDown(0) || !Keyboard.isKeyDown(54) && !Keyboard.isKeyDown(42)) {
                 this.leftDownTime = 0L;
                 this.leftUpTime = 0L;
